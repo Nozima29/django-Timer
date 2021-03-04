@@ -1,0 +1,23 @@
+@font-face {
+    font-family: sevenSegment;
+    src: url("Segment.ttf");
+}
+h1 {
+    font-family: sevenSegment;
+    font-size: 15em;
+}
+#bar{
+    background-color: blue;
+}
+.container {
+    padding: 30px;
+}
+#progress{
+    height: 100px;
+}
+
+p {
+    display: inline;
+    margin-top: 0px;
+}
+

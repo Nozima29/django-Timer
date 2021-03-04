@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+    <title>Timer</title>
+</head>
+
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+            </div>
+            <div class="card-body" align="center">
+                <h1 id="count">0</h1>
+                <p id="passed"></p>
+            </div>
+
+        </div>
+    </div>
+    <hr>
+    <form action="{% url 'create' %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-4">
+                {{ form.start }}
+                <hr>
+                {{ form.end }}
+            </div>
+            <div class="col-sm-4">
+                <button class="btn btn-primary" id="set_btn">Set time</button>
+            </div>
+            <div class="col-sm-4">
+                <button class="btn btn-primary" id="pause_btn">Pause</button>
+                <button class="btn btn-primary" id="play_btn">Play</button>
+                <input type="submit" value="STOP" class="btn btn-danger ">
+            </div>
+        </div>
+    </form>
+    <div class="bars" style="border-radius: 5px; background-color: #A8DEE2">
+        <div id="bar" style="background-color: #425AE2; border-radius: 5px">
+            <p id="num"></p>
+        </div>
+    </div>
+    <hr>
+    <h2 class="text-center">All timers</h2>
+    <hr>
+    {% for timer in timers %}
+        <div class="all-bars">
+            <div class="row">
+                <div class="col-md-2">
+                    {{ timer.start }} - {{ timer.end }}
+                </div>
+                <div class="col-md-10">
+                    <div class="progress">
+
+                        <progress id="progress" max="{{ timer.start }}" value="{{ timer.end }}"
+                                  style="width: 100%; background-color: #85E286;"></progress>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    {% endfor %}
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</div>
+</body>
+
+</html>
+
+<script>
+    var count = document.getElementById("count");
+    var passed = document.getElementById("passed");
+    var bar = document.getElementById("bar");
+    var numeric = document.getElementById("num");
+    var time_passed = 0
+    var counter = 0;
+    var paused = false;
+    var width = 0
+
+    $("#set_btn").on("click", function (event) {
+        counter = $("#time_set").val();
+        width = counter;
+        paused = false;
+        event.preventDefault();
+        setInterval(timer_start, 1000);
+    });
+
+    $("#pause_btn").on("click", function (event) {
+        event.preventDefault();
+        paused = true;
+        count.innerHTML = counter;
+    });
+    $('form').submit(function () {
+        $("#time_stop").val(counter);
+        paused = false;
+    });
+
+    $("#play_btn").on("click", function (event) {
+        event.preventDefault();
+        paused = false;
+    });
+
+    function timer_start() {
+        if (counter > 0 && !paused) {
+            counter--;
+            time_passed++;
+            count.innerHTML = counter;
+            passed.innerHTML = "Time passed:" + time_passed;
+            percentage = Math.round(time_passed * 100 / width)
+            numeric.innerHTML = percentage + " %";
+            bar.style.width = time_passed + "%";
+
+            console.log(time_passed);
+        }
+
+    }
+
+
+</script>

@@ -1,4 +1,5 @@
-Accessing url on localhost - http://127.0.0.1:8000/timer/
+Accessing url on localhost - http://127.0.0.1:8000/mytimer/
+
 For admin - http://127.0.0.1:8000/admin/
 
 Clone the project -> 
